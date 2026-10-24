@@ -1,3 +1,4 @@
+{{- if eq .Values.redis_host "redis" }}
 ---
 apiVersion: v1
 kind: Service
@@ -99,3 +100,4 @@ spec:
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
+{{- end }}
