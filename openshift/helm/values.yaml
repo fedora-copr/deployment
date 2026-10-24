@@ -18,6 +18,10 @@ distgit_fqdn: copr-distgit
 backend_fqdn: copr-backend
 resalloc_webui_fqdn: ""
 
+redis_host: "redis"
+redis_port: 6379
+redis_password: ""
+
 # Empty PostgreSQL/Redis images preserve the legacy ImageStream trigger flow.
 postgresql_image: ""
 redis_image: ""
