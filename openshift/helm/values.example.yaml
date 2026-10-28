@@ -38,9 +38,6 @@ aws_config:
   # uploaded into AWS, so pay attention to name.
   ssh_key:
     name: ...
-    private: |
-      -----BEGIN RSA PRIVATE KEY-----
-      ... your very long script here ...
-      -----END RSA PRIVATE KEY-----
-    public: ssh-rsa AAAAB3Nz....
+    private: ""
+    public: ""
 # resalloc_pools_configmap: resalloc-pools

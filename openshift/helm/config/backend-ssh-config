@@ -1,0 +1,9 @@
+Host *
+   IdentityFile /backend-home/.ssh/id_rsa
+   IdentitiesOnly yes
+   PasswordAuthentication no
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   ServerAliveInterval 20
+   ServerAliveCountMax 5
+   ConnectTimeout 60

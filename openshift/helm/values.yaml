@@ -41,6 +41,7 @@ copr_keygen_image: quay.io/copr/keygen:test
 aws_config:
   access_key_id: ""
   secret_access_key: ""
+  # Runtime Secret mounts only; neither backend nor resalloc images contain keys.
   ssh_key:
     name: ""
     private: ""

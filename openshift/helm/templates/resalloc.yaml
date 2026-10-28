@@ -43,7 +43,7 @@ data:
   aws_credentials: {{ tpl (.Files.Get "config/resalloc-aws-credentials.j2") . | b64enc | quote }}
   id_rsa: {{ .Values.aws_config.ssh_key.private | toString | b64enc | quote }}
   id_rsa.pub: {{ .Values.aws_config.ssh_key.public | toString | b64enc | quote }}
-  ssh_config: SG9zdCAqCiAgIElkZW50aXR5RmlsZSB+Ly5zc2gvaWRfcnNhCiAgIFN0cmljdEhvc3RLZXlDaGVja2luZyAgbm8KICAgVXNlcktub3duSG9zdHNGaWxlIC9kZXYvbnVsbAogICBTZXJ2ZXJBbGl2ZUludGVydmFsIDIwCiAgIFNlcnZlckFsaXZlQ291bnRNYXggNQogICBDb25uZWN0VGltZW91dCA2MAo=
+  ssh_config: {{ .Files.Get "config/resalloc-ssh-config" | b64enc | quote }}
   ansible_conf: {{ "[defaults]\nlocal_tmp=/tmp/.ansible\n[ssh_connection]\ncontrol_path_dir=/tmp/.ansible\n" | b64enc | quote }}
 
 ---
@@ -161,6 +161,7 @@ spec:
               mountPath: /var/lib/resallocserver/provision
             - name: resalloc-home
               mountPath: /resalloc-home
+              readOnly: true
           env:
             - name: CONFIG_DIR
               value: /etc/resallocserver

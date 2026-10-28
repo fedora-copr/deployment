@@ -50,16 +50,9 @@ kind: Secret
 metadata:
   name: backend-home
 type: Opaque
-stringData:
-  id_rsa: {{ .Values.aws_config.ssh_key.private | quote }}
-  ssh_config: |
-    Host *
-       IdentityFile ~/.ssh/id_rsa
-       StrictHostKeyChecking  no
-       UserKnownHostsFile /dev/null
-       ServerAliveInterval 20
-       ServerAliveCountMax 5
-       ConnectTimeout 60
+data:
+  id_rsa: {{ .Values.aws_config.ssh_key.private | toString | b64enc | quote }}
+  ssh_config: {{ .Files.Get "config/backend-ssh-config" | b64enc | quote }}
 
 ---
 apiVersion: v1
@@ -137,6 +130,12 @@ spec:
               mountPath: /var/lib/copr/public_html
             - name: locks
               mountPath: /var/lock/copr-backend
+            - name: home
+              mountPath: /backend-home
+              readOnly: true
+          env:
+            - name: HOME
+              value: /backend-home
           command: ["/usr/bin/tini", "--"]
           args: ["/run-backend", "--sign-host", "copr-keygen", "/usr/bin/copr-run-dispatcher-backend", "actions"]
           livenessProbe:
@@ -159,6 +158,7 @@ spec:
               mountPath: /var/lock/copr-backend
             - name: home
               mountPath: /backend-home
+              readOnly: true
           env:
             - name: HOME
               value: /backend-home
