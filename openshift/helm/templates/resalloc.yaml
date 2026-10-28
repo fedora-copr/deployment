@@ -100,7 +100,7 @@ spec:
       initContainers:
         - name: sync-provision
           image: {{ .Values.resalloc_image | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           command:
             - /bin/bash
             - -ec
@@ -144,7 +144,7 @@ spec:
       containers:
         - name: server
           image: {{ .Values.resalloc_image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           ports:
             - containerPort: 49100
               protocol: TCP
@@ -182,7 +182,7 @@ spec:
 
         - name: resalloc-webui
           image: {{ .Values.resalloc_image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           resources:
 {{ toYaml .Values.resources.resalloc.webui | indent 12 }}
           volumeMounts:

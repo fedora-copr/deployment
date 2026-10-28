@@ -72,7 +72,7 @@ spec:
                   key: database-name
                   name: postgresql
           image: {{ .Values.postgresql_image | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           startupProbe:
             exec:
               command:

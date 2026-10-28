@@ -102,7 +102,7 @@ spec:
       containers:
         - name: log
           image: {{ .Values.copr_backend_image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           resources:
 {{ toYaml .Values.resources.backend.log | indent 12 }}
           command: ["/usr/bin/tini", "--"]
@@ -120,7 +120,7 @@ spec:
 
         - name: actions
           image: {{ .Values.copr_backend_image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           resources:
 {{ toYaml .Values.resources.backend.actions | indent 12 }}
           volumeMounts:
@@ -146,7 +146,7 @@ spec:
 
         - name: builds
           image: {{ .Values.copr_backend_image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           resources:
 {{ toYaml .Values.resources.backend.builds | indent 12 }}
           volumeMounts:
@@ -172,7 +172,7 @@ spec:
 
         - name: httpd
           image: {{ .Values.nginx_image }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           resources:
 {{ toYaml .Values.resources.backend.httpd | indent 12 }}
           ports:

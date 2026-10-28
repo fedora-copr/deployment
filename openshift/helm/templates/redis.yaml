@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - image: {{ .Values.redis_image | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           startupProbe:
             exec:
               command:

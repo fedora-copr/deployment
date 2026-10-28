@@ -68,7 +68,7 @@ spec:
       containers:
         - name: signer
           image: {{ .Values.copr_keygen_image | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           resources:
 {{ toYaml .Values.resources.keygen.signer | indent 12 }}
           command: ["/usr/bin/tini", "--"]
@@ -94,7 +94,7 @@ spec:
 
         - name: httpd
           image: {{ .Values.copr_keygen_image | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           resources:
 {{ toYaml .Values.resources.keygen.httpd | indent 12 }}
           command: ["/usr/sbin/httpd", "-DFOREGROUND"]

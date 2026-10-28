@@ -6,6 +6,9 @@ oc_api_endpoint: https://your-api-of-openshift.example.com:6443
 # Name of the OpenShift project (namespace) to create and use
 project: <project-name>
 
+# When to pull images?
+image_pull_policy: Always
+
 # Use prod for production; staging/devel use the devel frontend environment.
 deployment: dev
 

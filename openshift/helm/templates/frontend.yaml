@@ -51,7 +51,7 @@ spec:
       containers:
         - name: copr-frontend
           image: {{ .Values.copr_frontend_image | quote }}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: {{ .Values.image_pull_policy }}
           ports:
             - containerPort: 5000
               protocol: TCP
