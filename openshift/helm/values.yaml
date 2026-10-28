@@ -3,6 +3,7 @@
 
 project: copr-dev
 create_project: false
+# Use prod for production; other deployments use the devel frontend environment.
 deployment: dev
 devel: true
 rpm_vendor_copr_name: Copr
@@ -12,6 +13,8 @@ postgres_password: ""
 postgres_database_name: copr-db
 
 frontend_backend_password: ""
+# Required: a persistent random frontend session/CSRF secret.
+frontend_secret_key: ""
 
 frontend_base_url: http://copr-frontend:5000
 distgit_fqdn: copr-distgit

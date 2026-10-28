@@ -58,12 +58,13 @@ repos:
           - -c
           - |
             set -euo pipefail
-            helm lint openshift/helm
+            helm lint openshift/helm --set-string frontend_secret_key=ci-pre-commit
             helm template ci openshift/helm \
               -f openshift/helm/values.yaml \
               --set-string postgres_password=ci-pre-commit \
               --set-string frontend_backend_password=ci-pre-commit \
-              | grep -q '^kind: '
+              --set-string frontend_secret_key=ci-pre-commit \
+              | grep '^kind: ' > /dev/null
         language: system
         pass_filenames: false
         files: ^openshift/helm/

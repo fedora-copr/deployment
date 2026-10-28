@@ -6,12 +6,19 @@ oc_api_endpoint: https://your-api-of-openshift.example.com:6443
 # Name of the OpenShift project (namespace) to create and use
 project: <project-name>
 
+# Use prod for production; staging/devel use the devel frontend environment.
+deployment: dev
+
 # Password for the PostgreSQL pod
 postgres_password: ...
 
 # Token for the {Backend,DistGit} => Frontend communication.  Generate some
 # long string here.
 frontend_backend_password: ...
+
+# Persistent session/CSRF secret, independent of the backend token.
+# Generate with: openssl rand -hex 32
+frontend_secret_key: ...
 
 # Copr builders are hosted outside from the OpenShift cluster, but still they
 # need to contact these machines on fully qualified domain names.
