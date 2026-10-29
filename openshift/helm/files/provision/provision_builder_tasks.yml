@@ -121,6 +121,11 @@
     src: files/main.ini
     dest: /etc/copr-rpmbuild/main.ini
 
+- name: put dist-git-client instance config in the right place
+  ansible.builtin.copy:
+    src: files/dist-git-client.ini
+    dest: /etc/dist-git-client/copr-instance.ini
+
 - name: mockbuilder authorized_keys
   authorized_key:
     user: mockbuilder

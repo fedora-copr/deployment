@@ -27,6 +27,8 @@ metadata:
 data:
   rpmbuild-main.ini: |
 {{ tpl (.Files.Get "config/builder-rpmbuild-main.ini.j2") . | indent 4 }}
+  dist-git-client.ini: |
+{{ tpl (.Files.Get "config/builder-dist-git-client.ini.j2") . | indent 4 }}
   buildsys.pub: |
 {{ tpl (.Files.Get "config/builder-buildsys.pub.j2") . | indent 4 }}
   vars.yml: |
@@ -131,10 +133,12 @@ spec:
               # Builder provision overlays (templated in helm)
               mkdir -p /dest/files
               cp /overlays/rpmbuild-main.ini /dest/files/main.ini
+              cp /overlays/dist-git-client.ini /dest/files/dist-git-client.ini
               cp /overlays/buildsys.pub /dest/files/buildsys.pub
               cp /overlays/vars.yml /dest/vars.yml
               test -f /dest/builderpb-aws.yml
               test -f /dest/files/main.ini
+              test -f /dest/files/dist-git-client.ini
               test -f /dest/files/buildsys.pub
               test -f /dest/vars.yml
 

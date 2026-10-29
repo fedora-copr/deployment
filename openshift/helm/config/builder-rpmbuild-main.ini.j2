@@ -12,3 +12,8 @@ macro_override_db_url = https://copr-be.cloud.fedoraproject.org/config/distro-ar
 distgit_hostname_pattern = src.fedoraproject.org
 distgit_lookaside_url = https://src.fedoraproject.org/repo/pkgs/%(ns1)s/%(name)s/%(filename)s/%(hashtype)s/%(hash)s/%(filename)s
 distgit_clone_url = https://src.fedoraproject.org/%(repo_path)s
+
+[distgit1]
+distgit_hostname_pattern = {{ .Values.distgit_fqdn }}
+distgit_lookaside_url = http://{{ .Values.distgit_fqdn }}/repo/pkgs/%(repo_path)s/%(filename)s/%(hashtype)s/%(hash)s/%(filename)s
+distgit_clone_url = http://{{ .Values.distgit_fqdn }}/git/%(repo_path)s

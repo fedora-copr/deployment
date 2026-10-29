@@ -1,0 +1,6 @@
+[partners-copr]
+clone_hostnames = {{ .Values.distgit_fqdn }}
+lookaside_location = http://{{ .Values.distgit_fqdn }}
+lookaside_uri_pattern = repo/pkgs/{namespace[1]}/{namespace[0]}/{name}/{filename}/{hashtype}/{hash}/{filename}
+cloning_pattern_package_parts = owner_name project_name package_name
+cloning_pattern = http://{{ .Values.distgit_fqdn }}/git/{package}
