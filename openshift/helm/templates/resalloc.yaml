@@ -41,8 +41,8 @@ type: Opaque
 data:
   aws_config: {{ printf "[%s]\nregion = %s\n" (.Values.aws_profile | default "default") (.Values.aws_region | default "us-east-1") | b64enc | quote }}
   aws_credentials: {{ tpl (.Files.Get "config/resalloc-aws-credentials.j2") . | b64enc | quote }}
-  id_rsa: {{ .Values.aws_config.ssh_key.private | toString | b64enc | quote }}
-  id_rsa.pub: {{ .Values.aws_config.ssh_key.public | toString | b64enc | quote }}
+  id_rsa: {{ coalesce .Values.aws_ssh_private_key .Values.aws_config.ssh_key.private | toString | b64enc | quote }}
+  id_rsa.pub: {{ coalesce .Values.aws_ssh_public_key .Values.aws_config.ssh_key.public | toString | b64enc | quote }}
   ssh_config: {{ .Files.Get "config/resalloc-ssh-config" | b64enc | quote }}
   ansible_conf: {{ "[defaults]\nlocal_tmp=/tmp/.ansible\n[ssh_connection]\ncontrol_path_dir=/tmp/.ansible\n" | b64enc | quote }}
 

@@ -40,6 +40,12 @@ copr_keygen_image: quay.io/copr/keygen:test
 
 image_pull_policy: Always
 
+# Top-level aliases for AppSRE secretParameters (names cannot contain dots).
+aws_access_key_id: ""
+aws_secret_access_key: ""
+aws_ssh_private_key: ""
+aws_ssh_public_key: ""
+
 aws_config:
   access_key_id: ""
   secret_access_key: ""

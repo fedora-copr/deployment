@@ -1,1 +1,1 @@
-{{ .Values.aws_config.ssh_key.public }}
+{{ coalesce .Values.aws_ssh_public_key .Values.aws_config.ssh_key.public }}
