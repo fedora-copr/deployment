@@ -1,7 +1,7 @@
 [dist-git]
 frontend_base_url=http://copr-frontend:5000
 frontend_auth={{ .Values.frontend_backend_password }}
-per_task_log_dir=/var/lib/copr-dist-git/per-task-logs/
+per_task_log_dir=/var/lib/dist-git/per-task-logs/
 redis_host={{ .Values.redis_host }}
 redis_port={{ .Values.redis_port }}
 {{- if .Values.redis_password }}
