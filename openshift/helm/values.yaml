@@ -11,6 +11,7 @@ rpm_vendor_copr_name: Copr
 postgres_user: copr-fe
 postgres_password: ""
 postgres_database_name: copr-db
+postgres_port: 5432
 
 frontend_backend_password: ""
 # Required: a persistent random frontend session/CSRF secret.

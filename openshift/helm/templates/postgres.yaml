@@ -24,8 +24,8 @@ metadata:
 spec:
   ports:
     - name: postgresql
-      port: 5432
-      targetPort: 5432
+      port: {{ .Values.postgres_port }}
+      targetPort: {{ .Values.postgres_port }}
   selector:
     name: postgresql
 
@@ -99,7 +99,7 @@ spec:
             timeoutSeconds: 10
           name: postgresql
           ports:
-            - containerPort: 5432
+            - containerPort: {{ .Values.postgres_port }}
               protocol: TCP
           readinessProbe:
             exec:

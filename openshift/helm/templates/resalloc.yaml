@@ -155,6 +155,28 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
+        - name: migrate-db
+          image: {{ .Values.resalloc_image | quote }}
+          imagePullPolicy: {{ .Values.image_pull_policy }}
+          command:
+            - python3
+            - -c
+            - |
+              from resallocserver.main import init_by_alembic
+              init_by_alembic()
+          env:
+            - name: CONFIG_DIR
+              value: /etc/resallocserver
+          volumeMounts:
+            - name: resalloc-data
+              mountPath: /var/lib/resallocserver
+            - name: resalloc-logs
+              mountPath: /var/log/resallocserver
+            - name: resalloc-config
+              mountPath: /etc/resallocserver
+              readOnly: true
+          resources:
+{{ toYaml .Values.resources.resalloc.app | indent 12 }}
       containers:
         - name: server
           image: {{ .Values.resalloc_image }}
