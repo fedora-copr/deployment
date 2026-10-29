@@ -34,17 +34,31 @@ data:
 
 ---
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: resalloc-home-config
+data:
+  aws_config: |
+{{ printf "[%s]\nregion = %s\n" (.Values.aws_profile | default "default") (.Values.aws_region | default "us-east-1") | indent 4 }}
+  ssh_config: |
+{{ .Files.Get "config/resalloc-ssh-config" | indent 4 }}
+  ansible_conf: |
+    [defaults]
+    local_tmp=/tmp/.ansible
+    [ssh_connection]
+    control_path_dir=/tmp/.ansible
+
+---
+apiVersion: v1
 kind: Secret
 metadata:
-  name: resalloc-home
+  name: resalloc-secrets
 type: Opaque
-data:
-  aws_config: {{ printf "[%s]\nregion = %s\n" (.Values.aws_profile | default "default") (.Values.aws_region | default "us-east-1") | b64enc | quote }}
-  aws_credentials: {{ tpl (.Files.Get "config/resalloc-aws-credentials.j2") . | b64enc | quote }}
-  id_rsa: {{ coalesce .Values.aws_ssh_private_key .Values.aws_config.ssh_key.private | toString | b64enc | quote }}
-  id_rsa.pub: {{ coalesce .Values.aws_ssh_public_key .Values.aws_config.ssh_key.public | toString | b64enc | quote }}
-  ssh_config: {{ .Files.Get "config/resalloc-ssh-config" | b64enc | quote }}
-  ansible_conf: {{ "[defaults]\nlocal_tmp=/tmp/.ansible\n[ssh_connection]\ncontrol_path_dir=/tmp/.ansible\n" | b64enc | quote }}
+stringData:
+  aws_credentials: |
+{{ tpl (.Files.Get "config/resalloc-aws-credentials.j2") . | indent 4 }}
+  id_rsa: |
+{{ coalesce .Values.aws_ssh_private_key .Values.aws_config.ssh_key.private | toString | indent 4 }}
 
 ---
 apiVersion: v1
@@ -234,22 +248,27 @@ spec:
             name: builder-provision-overlays
 
         - name: resalloc-home
-          secret:
-            secretName: resalloc-home
+          projected:
             defaultMode: 0600
-            items:
-              - key: aws_config
-                path: .aws/config
-              - key: aws_credentials
-                path: .aws/credentials
-              - key: id_rsa
-                path: .ssh/id_rsa
-              # id_rsa.pub optional — not in Vault yet; builders get pubkey via
-              # overlay files/buildsys.pub once aws_config.ssh_key.public is set.
-              - key: ssh_config
-                path: .ssh/config
-              - key: ansible_conf
-                path: .ansible.cfg
+            sources:
+              - secret:
+                  name: resalloc-secrets
+                  items:
+                    - key: aws_credentials
+                      path: .aws/credentials
+                      mode: 0600
+                    - key: id_rsa
+                      path: .ssh/id_rsa
+                      mode: 0600
+              - configMap:
+                  name: resalloc-home-config
+                  items:
+                    - key: aws_config
+                      path: .aws/config
+                    - key: ssh_config
+                      path: .ssh/config
+                    - key: ansible_conf
+                      path: .ansible.cfg
 
         - name: resalloc-data
           persistentVolumeClaim:

@@ -37,12 +37,12 @@ spec:
 
 ---
 apiVersion: v1
-kind: Secret
+kind: ConfigMap
 metadata:
   name: distgit-config
-type: Opaque
 data:
-  dist-git.conf: {{ tpl (.Files.Get "config/distgit-distgit.conf.j2") . | b64enc | quote }}
+  dist-git.conf: |
+{{ tpl (.Files.Get "config/distgit-distgit.conf.j2") . | indent 4 }}
 
 ---
 apiVersion: v1
@@ -50,8 +50,9 @@ kind: Secret
 metadata:
   name: distgit-copr-config
 type: Opaque
-data:
-  copr-dist-git.conf: {{ tpl (.Files.Get "config/distgit-copr.conf.j2") . | b64enc | quote }}
+stringData:
+  copr-dist-git.conf: |
+{{ tpl (.Files.Get "config/distgit-copr.conf.j2") . | indent 4 }}
 
 ---
 apiVersion: v1
@@ -101,6 +102,7 @@ spec:
           volumeMounts:
             - name: distgit-copr-config
               mountPath: /etc/copr
+              readOnly: true
             - name: distgit-config
               mountPath: /etc/dist-git
             - name: storage
@@ -132,6 +134,7 @@ spec:
           volumeMounts:
             - name: distgit-copr-config
               mountPath: /etc/copr
+              readOnly: true
             - name: distgit-config
               mountPath: /etc/dist-git
             - name: storage
@@ -146,14 +149,12 @@ spec:
 
       volumes:
         - name: distgit-config
-          secret:
-            secretName: distgit-config
-            optional: false
+          configMap:
+            name: distgit-config
 
         - name: distgit-copr-config
           secret:
             secretName: distgit-copr-config
-            optional: false
 
         - name: storage
           persistentVolumeClaim:

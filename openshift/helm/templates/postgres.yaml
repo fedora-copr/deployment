@@ -5,8 +5,15 @@ metadata:
   name: postgresql
 type: Opaque
 stringData:
-  database-user: {{ .Values.postgres_user | quote }}
   database-password: {{ .Values.postgres_password | quote }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql
+data:
+  database-user: {{ .Values.postgres_user | quote }}
   database-name: {{ .Values.postgres_database_name | quote }}
 
 ---
@@ -58,7 +65,7 @@ spec:
         - env:
             - name: POSTGRESQL_USER
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: database-user
                   name: postgresql
             - name: POSTGRESQL_PASSWORD
@@ -68,7 +75,7 @@ spec:
                   name: postgresql
             - name: POSTGRESQL_DATABASE
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: database-name
                   name: postgresql
           image: {{ .Values.postgresql_image | quote }}
