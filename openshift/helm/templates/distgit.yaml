@@ -68,30 +68,27 @@ spec:
     name: copr-distgit
 
 ---
-apiVersion: image.openshift.io/v1
-kind: ImageStream
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: copr-distgit
+  labels:
+    app: copr
+    component: distgit
 spec:
-  tags:
-    - from:
-        kind: DockerImage
-        name: quay.io/copr/distgit:test
-      importPolicy:
-        scheduled: true
-      name: test
-
----
-kind: DeploymentConfig
-apiVersion: apps.openshift.io/v1
-metadata:
-  name: copr-distgit
-spec:
+  replicas: 1
   revisionHistoryLimit: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: copr-distgit
   template:
     metadata:
       labels:
         name: copr-distgit
+        app: copr
+        component: distgit
     spec:
       containers:
         - name: imports
@@ -169,25 +166,6 @@ spec:
             claimName: copr-distgit-locks
 
       restartPolicy: Always
-
-  replicas: 1
-  strategy:
-    type: Recreate
-    resources:
-{{ toYaml .Values.resources.distgit.strategy | indent 6 }}
-
-  triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - imports
-          - httpd
-        from:
-          kind: ImageStreamTag
-          name: copr-distgit:test
-      type: ImageChange
-
-    - type: ConfigChange
 
 ---
 apiVersion: route.openshift.io/v1

@@ -1,19 +1,5 @@
 # vi: ft=yaml
 ---
-apiVersion: image.openshift.io/v1
-kind: ImageStream
-metadata:
-  name: copr-keygen
-spec:
-  tags:
-    - from:
-        kind: DockerImage
-        name: quay.io/copr/keygen:test
-      importPolicy:
-        scheduled: true
-      name: test
-
----
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -54,16 +40,27 @@ spec:
     name: copr-keygen
 
 ---
-kind: DeploymentConfig
-apiVersion: apps.openshift.io/v1
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: copr-keygen
+  labels:
+    app: copr
+    component: keygen
 spec:
+  replicas: 1
   revisionHistoryLimit: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: copr-keygen
   template:
     metadata:
       labels:
         name: copr-keygen
+        app: copr
+        component: keygen
     spec:
       containers:
         - name: signer
@@ -127,22 +124,3 @@ spec:
             claimName: copr-keygen-logs
 
       restartPolicy: Always
-
-  replicas: 1
-  strategy:
-    type: Recreate
-    resources:
-{{ toYaml .Values.resources.keygen.strategy | indent 6 }}
-
-  triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - signer
-          - httpd
-        from:
-          kind: ImageStreamTag
-          name: copr-keygen:test
-      type: ImageChange
-
-    - type: ConfigChange

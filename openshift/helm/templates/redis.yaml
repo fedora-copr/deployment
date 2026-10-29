@@ -25,26 +25,30 @@ spec:
       storage: 1Gi
 
 ---
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: redis
+  labels:
+    app: copr
+    component: redis
 spec:
-  revisionHistoryLimit: 1
   replicas: 1
-  selector:
-    name: redis
+  revisionHistoryLimit: 1
   strategy:
     type: Recreate
-    resources:
-{{ toYaml .Values.resources.redis.strategy | indent 6 }}
+  selector:
+    matchLabels:
+      name: redis
   template:
     metadata:
       labels:
         name: redis
+        app: copr
+        component: redis
     spec:
       containers:
-        - image: {{ .Values.redis_image | quote }}
+        - image: {{ required "redis_image is required" .Values.redis_image | quote }}
           imagePullPolicy: {{ .Values.image_pull_policy }}
           startupProbe:
             exec:
@@ -89,15 +93,4 @@ spec:
           persistentVolumeClaim:
             claimName: redis
 
-  triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - redis
-        from:
-          kind: ImageStreamTag
-          name: redis:5-el8
-          namespace: openshift
-      type: ImageChange
-    - type: ConfigChange
 {{- end }}

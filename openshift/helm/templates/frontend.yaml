@@ -24,30 +24,27 @@ spec:
     name: copr-frontend
 
 ---
-apiVersion: image.openshift.io/v1
-kind: ImageStream
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: copr-frontend
+  labels:
+    app: copr
+    component: frontend
 spec:
-  tags:
-    - from:
-        kind: DockerImage
-        name: quay.io/copr/frontend:test
-      importPolicy:
-        scheduled: true
-      name: test
-
----
-kind: DeploymentConfig
-apiVersion: apps.openshift.io/v1
-metadata:
-  name: copr-frontend
-spec:
+  replicas: 1
   revisionHistoryLimit: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: copr-frontend
   template:
     metadata:
       labels:
         name: copr-frontend
+        app: copr
+        component: frontend
     spec:
       containers:
         - name: copr-frontend
@@ -87,23 +84,6 @@ spec:
           secret:
             secretName: copr-frontend-config
             optional: false
-
-  replicas: 1
-  strategy:
-    type: Recreate
-    resources:
-{{ toYaml .Values.resources.frontend.strategy | indent 6 }}
-
-  triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - copr-frontend
-        from:
-          kind: ImageStreamTag
-          name: copr-frontend:test
-      type: ImageChange
-    - type: ConfigChange
 
 ---
 apiVersion: route.openshift.io/v1

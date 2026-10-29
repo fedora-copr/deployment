@@ -29,13 +29,6 @@ resources:
       limits:
         memory: "64Mi"
         cpu: "25m"
-    strategy:
-      requests:
-        memory: "16Mi"
-        cpu: "5m"
-      limits:
-        memory: "64Mi"
-        cpu: "25m"
   distgit:
     imports:
       requests:
@@ -51,13 +44,6 @@ resources:
       limits:
         memory: "64Mi"
         cpu: "25m"
-    strategy:
-      requests:
-        memory: "16Mi"
-        cpu: "5m"
-      limits:
-        memory: "64Mi"
-        cpu: "25m"
   frontend:
     app:
       requests:
@@ -66,13 +52,6 @@ resources:
       limits:
         memory: "512Mi"
         cpu: "100m"
-    strategy:
-      requests:
-        memory: "16Mi"
-        cpu: "5m"
-      limits:
-        memory: "64Mi"
-        cpu: "25m"
   keygen:
     signer:
       requests:
@@ -88,13 +67,6 @@ resources:
       limits:
         memory: "64Mi"
         cpu: "25m"
-    strategy:
-      requests:
-        memory: "16Mi"
-        cpu: "5m"
-      limits:
-        memory: "64Mi"
-        cpu: "25m"
   postgres:
     app:
       requests:
@@ -103,13 +75,6 @@ resources:
       limits:
         memory: "256Mi"
         cpu: "100m"
-    strategy:
-      requests:
-        memory: "16Mi"
-        cpu: "5m"
-      limits:
-        memory: "64Mi"
-        cpu: "25m"
   redis:
     app:
       requests:
@@ -118,13 +83,6 @@ resources:
       limits:
         memory: "128Mi"
         cpu: "100m"
-    strategy:
-      requests:
-        memory: "16Mi"
-        cpu: "5m"
-      limits:
-        memory: "64Mi"
-        cpu: "25m"
   resalloc:
     app:
       requests:
@@ -140,10 +98,3 @@ resources:
       limits:
         memory: "128Mi"
         cpu: "100m"
-    strategy:
-      requests:
-        memory: "16Mi"
-        cpu: "5m"
-      limits:
-        memory: "64Mi"
-        cpu: "25m"

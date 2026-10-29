@@ -25,9 +25,8 @@ redis_host: "redis"
 redis_port: 6379
 redis_password: ""
 
-# Empty PostgreSQL/Redis images preserve the legacy ImageStream trigger flow.
-postgresql_image: ""
-redis_image: ""
+postgresql_image: quay.io/sclorg/postgresql-18-c10s
+redis_image: quay.io/sclorg/redis-7-c9s
 copr_frontend_image: quay.io/copr/frontend:test
 copr_backend_image: quay.io/copr/backend:test
 nginx_image: quay.io/sclorg/nginx-126-c10s
@@ -40,7 +39,7 @@ copr_keygen_image: quay.io/copr/keygen:test
 
 image_pull_policy: Always
 
-# Top-level aliases for AppSRE secretParameters (names cannot contain dots).
+# Top-level aliases for AppSRE secretParameters (names cannot contain dots)
 aws_access_key_id: ""
 aws_secret_access_key: ""
 aws_ssh_private_key: ""
@@ -69,13 +68,6 @@ resources:
     actions: *small_app
     builds: *small_app
     httpd: *small_app
-    strategy: &rollout
-      requests:
-        cpu: 10m
-        memory: 32Mi
-      limits:
-        cpu: 100m
-        memory: 64Mi
 
   frontend:
     app: &medium_app
@@ -85,27 +77,21 @@ resources:
       limits:
         cpu: 500m
         memory: 512Mi
-    strategy: *rollout
 
   distgit:
     imports: *medium_app
     httpd: *small_app
-    strategy: *rollout
 
   keygen:
     signer: *small_app
     httpd: *small_app
-    strategy: *rollout
 
   resalloc:
     app: *small_app
     webui: *small_app
-    strategy: *rollout
 
   postgres:
     app: *medium_app
-    strategy: *rollout
 
   redis:
     app: *small_app
-    strategy: *rollout

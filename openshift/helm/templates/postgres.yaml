@@ -42,24 +42,28 @@ spec:
       storage: {{ ternary "12Gi" "1Gi" (eq .Values.deployment "prod") | quote }}
 
 ---
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: postgresql
+  labels:
+    app: copr
+    component: postgres
 spec:
-  revisionHistoryLimit: 1
   replicas: 1
-  selector:
-    name: postgresql
+  revisionHistoryLimit: 1
   strategy:
     type: Recreate
-    resources:
-{{ toYaml .Values.resources.postgres.strategy | indent 6 }}
+  selector:
+    matchLabels:
+      name: postgresql
   template:
     metadata:
       labels:
         name: postgresql
         test: test-postgresql-tag
+        app: copr
+        component: postgres
     spec:
       containers:
         - env:
@@ -78,7 +82,7 @@ spec:
                 configMapKeyRef:
                   key: database-name
                   name: postgresql
-          image: {{ .Values.postgresql_image | quote }}
+          image: {{ required "postgresql_image is required" .Values.postgresql_image | quote }}
           imagePullPolicy: {{ .Values.image_pull_policy }}
           startupProbe:
             exec:
@@ -113,15 +117,3 @@ spec:
         - name: postgresql-data
           persistentVolumeClaim:
             claimName: postgresql
-
-  triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-          - postgresql
-        from:
-          kind: ImageStreamTag
-          name: postgresql:12-el8
-          namespace: openshift
-      type: ImageChange
-    - type: ConfigChange
